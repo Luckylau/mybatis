@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="common">
+    <sql id="idsForEach">
+        <foreach collection="ids" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </sql>
+
+    <sql id="dynamicConditions">
+        <if test="conditions!=null and conditions.size()>0">
+            <foreach collection="conditions" item="condition" index="index">
+                <choose>
+                    <when test="condition.operator.type=='isnull' or condition.operator.type=='isnotnull'">
+                        AND `${condition.field}` ${condition.operator.value}
+                    </when>
+                    <otherwise>
+                        <if test="condition.newValue!=null and condition.newValue.toString().length()>0">
+                            AND
+                            <choose>
+                                <when test="condition.operator.type=='in' or condition.operator.type=='notin'">
+                                    `${condition.field}` ${condition.operator.value}
+                                    <foreach item="item" index="index" collection="condition.newValue" open="("
+                                             separator="," close=")">
+                                        #{item}
+                                    </foreach>
+                                </when>
+                                <otherwise>
+                                    `${condition.field}` ${condition.operator.value} #{condition.newValue}
+                                </otherwise>
+                            </choose>
+                        </if>
+                    </otherwise>
+                </choose>
+            </foreach>
+        </if>
+    </sql>
+</mapper>

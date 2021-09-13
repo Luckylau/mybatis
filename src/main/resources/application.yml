@@ -1,0 +1,47 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      persistent: true
+      store-dir: /tmp
+      timeout: 36000
+      tracking-modes: cookie
+
+spring:
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql;pageNum=pageNum;pageSize=pageSize
+
+# 数据源配置--------------------------
+spring.datasource:
+  default:
+    url: jdbc:mysql://127.0.0.1:3306/learn?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=true
+    username: root
+    password: root123
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    filters: stat
+    maxActive: 300
+    initialSize: 10
+    maxWait: 60000
+    minIdle: 10
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 60000
+    validationQuery: select 1
+    testWhileIdle: true
+    testOnBorrow: true
+    testOnReturn: true
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+
+
